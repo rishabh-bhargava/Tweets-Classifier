@@ -17,6 +17,8 @@ api = tweepy.API(auth)
 
 user = api.me()
 
+#print api.friends_timeline()
+
 class StreamWatcherListener(tweepy.StreamListener):
 
     status_wrapper = TextWrapper(width=60, initial_indent='    ', subsequent_indent='    ')
@@ -25,6 +27,8 @@ class StreamWatcherListener(tweepy.StreamListener):
         try:
             print self.status_wrapper.fill(status.text)
             print '\n %s  %s  via %s\n' % (status.author.screen_name, status.created_at, status.source)
+            with open("sample_from_tweepy.txt", "a") as file:
+                file.write(status.text + '\n')
         except:
             # Catch any unicode errors while printing to console
             # and just ignore them to avoid breaking application.
