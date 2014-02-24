@@ -7,10 +7,15 @@ def extract_words(input_string):
       Returns a list of lowercase words in a strong.
       Punctuation and digits are separated out into their own words.
     """
-    for c in punctuation + digits:
-        input_string = input_string.replace(c, ' ' + c + ' ')
 
-    return input_string.lower().split()
+
+    for c in punctuation.replace('@', "") + digits :
+        input_string = input_string.replace(c, "")
+
+    print input_string
+    splitted_string = input_string.lower().split()
+
+    return [x for x in splitted_string if not (x.startswith("http") or x.startswith("@"))]
 
 def extract_dictionary(file):
     """
