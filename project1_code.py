@@ -150,10 +150,60 @@ def passive_agressive(feature_matrix, labels):
             eta = loss/((np.linalg.norm(sample_features))**2)
             theta = theta + sample_features*eta*label
             count+=1
+        print "checking if solved" + str(theta)
         if np.array_equal(theta, old_theta) or count == nsamples:
             solved = True  
-    return theta          
-    
+    return theta    
+
+def chunks(l, n):
+    return [l[i:i+n] for i in range(0, len(l), n)]
+def cross_validator(feature_matrix, labels, isPerceptron):
+    """
+    perceptron is true if you want to cross_validate perceptron
+    """
+    foldAmount = 10
+    foldedMatrix = np.array_split(feature_matrix,foldAmount)
+    foldedLabels = chunks(labels,len(labels)/foldAmount)
+    #print foldedLabels
+    correct = 0
+
+    for i in xrange(foldAmount):
+        print str(i) + "out of" + str(foldAmount-1)
+        unfoldedMatrix = None
+        unfoldedLabels = None
+        for k in xrange(foldAmount):
+            if k != i:
+                if(unfoldedMatrix == None):
+                    unfoldedMatrix = foldedMatrix[k]
+                else:
+                    unfoldedMatrix = np.vstack((unfoldedMatrix, foldedMatrix[k]))
+                if(unfoldedLabels == None):
+                    unfoldedLabels = foldedLabels[k]
+                else: 
+                    unfoldedLabels = np.vstack((unfoldedLabels,foldedLabels[k]))
+        unfoldedLabels = np.ravel(unfoldedLabels)
+        foldPart = foldedMatrix[i]
+        foldPartLabels = foldedLabels[i]
+        thetaList = None
+        #print unfoldedMatrix
+        #print unfoldedLabels
+        if(isPerceptron):
+            thetaList = perceptron(unfoldedMatrix,unfoldedLabels)
+            theta_0 = thetaList[len(thetaList)-1]
+            thetaList = np.delete(thetaList, len(thetaList)-1)
+        else:
+            thetaList = passive_agressive(unfoldedMatrix,unfoldedLabels)
+            theta_0 = 0
+        print thetaList.shape
+        print foldPart.shape
+
+        label_output = perceptron_classify(foldPart, theta_0,thetaList)
+
+        for j in xrange(0, len(label_output)):
+            if(label_output[j] == labels[j]):
+                correct = correct + 1
+
+    return correct
     
 def cross_validation_perceptron(feature_matrix, labels):
     (nsamples, nfeatures) = feature_matrix.shape
@@ -176,7 +226,8 @@ def cross_validation_perceptron(feature_matrix, labels):
 def cross_validation_passive_agressive(feature_matrix, labels):
     (nsamples, nfeatures) = feature_matrix.shape
     count = 0
-    for i in xrange(0, 5):
+    for i in xrange(0, nsamples):
+        print(i,"out of",nsamples)
         label = labels[i]
         labels1 = np.delete(labels, i)
         sample_feature = feature_matrix[i, :]
