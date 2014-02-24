@@ -2,6 +2,7 @@ import tweepy
 import time
 from getpass import getpass
 from textwrap import TextWrapper
+import project1_code as p1
 
 consumer_key = '5N6WnewfTr4TXiMNe7qqA'
 consumer_secret = 'sF7duztDHCwtH3eeCsuAqQEp8GzqpnJp7S9UyndpKgA'
@@ -27,8 +28,9 @@ class StreamWatcherListener(tweepy.StreamListener):
         try:
             print self.status_wrapper.fill(status.text)
             print '\n %s  %s  via %s\n' % (status.author.screen_name, status.created_at, status.source)
-            with open("sample_from_tweepy.txt", "a") as file:
-                file.write(status.text + '\n')
+            
+            with open("sample_from_tweepy_v2.txt", "a") as file:
+                file.write((status.text).replace('\n', '') + '\n')
         except:
             # Catch any unicode errors while printing to console
             # and just ignore them to avoid breaking application.
