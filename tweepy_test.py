@@ -16,7 +16,7 @@ auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
 
-user = api.me()
+#user = api.me()
 
 #print api.friends_timeline()
 
