@@ -12,7 +12,6 @@ def extract_words(input_string):
     for c in punctuation.replace('@', "") + digits :
         input_string = input_string.replace(c, "")
 
-    print input_string
     splitted_string = input_string.lower().split()
 
     return [x for x in splitted_string if not (x.startswith("http") or x.startswith("@"))]
@@ -105,7 +104,6 @@ def perceptron_classify(feature_matrix, theta_0, theta_vector):
     (nsamples, nfeatures) = feature_matrix.shape
     label_output = np.zeros([nsamples])
     
-    print nsamples
     
     for i in xrange(0, nsamples):   
         sample_features = feature_matrix[i, :]
@@ -155,7 +153,6 @@ def passive_agressive(feature_matrix, labels):
             eta = loss/((np.linalg.norm(sample_features))**2)
             theta = theta + sample_features*eta*label
             count+=1
-        print "checking if solved" + str(theta)
         if np.array_equal(theta, old_theta) or count == nsamples:
             solved = True  
     return theta    
@@ -173,7 +170,7 @@ def cross_validator(feature_matrix, labels, isPerceptron):
     correct = 0
 
     for i in xrange(foldAmount):
-        print str(i) + "out of" + str(foldAmount-1)
+        #print str(i) + "out of" + str(foldAmount-1)
         unfoldedMatrix = None
         unfoldedLabels = None
         for k in xrange(foldAmount):
@@ -199,8 +196,8 @@ def cross_validator(feature_matrix, labels, isPerceptron):
         else:
             thetaList = passive_agressive(unfoldedMatrix,unfoldedLabels)
             theta_0 = 0
-        print thetaList.shape
-        print foldPart.shape
+        #print thetaList.shape
+        #print foldPart.shape
 
         label_output = perceptron_classify(foldPart, theta_0,thetaList)
 
@@ -232,7 +229,7 @@ def cross_validation_passive_agressive(feature_matrix, labels):
     (nsamples, nfeatures) = feature_matrix.shape
     count = 0
     for i in xrange(0, nsamples):
-        print(i,"out of",nsamples)
+        #print(i,"out of",nsamples)
         label = labels[i]
         labels1 = np.delete(labels, i)
         sample_feature = feature_matrix[i, :]
@@ -253,8 +250,9 @@ def write_label_answer(vec, outfile):
       i.e., 70 rows, or 70 rows and 1 column.
     """
     
-    if(vec.shape[0] != 70):
-        print("Error - output vector should have 70 rows.")
+    if(vec.shape[0] != 180):
+        print("Error - output vector should have 182 rows.")
+        print(vec.shape[0])
         print("Aborting write.")
         return
 
